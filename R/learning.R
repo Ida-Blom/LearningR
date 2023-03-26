@@ -1,3 +1,1 @@
-x <- 1+1
-y <- x + 3
-y
+# When a conflict happens
