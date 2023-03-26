@@ -1,3 +1,1 @@
-x <- 1+1
-y <- x + 3
-y
+# Here's an example of a conflict
