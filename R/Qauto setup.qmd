@@ -1,0 +1,90 @@
+---
+title: "Reproducible documents"
+author: "Ida Blom"
+format: html
+editor: visual
+---
+
+```{r setup}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(NHANES)
+
+```
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+Headers should always be preceded and followed by an empty line:
+
+### Lists
+
+-   item 1
+-   item 2
+-   item 3
+
+1.  item 1
+2.  item 2
+3.  item 3
+
+### Text formatting
+
+**bold** \*\*
+
+*italics* \*
+
+^superscriot^ \^
+
+~subscript~ \~
+
+### Images
+
+samme mappe som din qurtro fil
+
+**!\[Image by Dimitri Houtteman from Pixabay.\](images/kitten.jpg)**
+
+![Image by Dimitri Houtteman from Pixabay.](C:/Users/wxv922/Documents/R/LearningR/doc/images/kitten.jpg)
+
+\
+
+```{r}
+nhanes_small <- select(NHANES, Age, Gender, BMI, Diabetes,
+                       PhysActive, BPSysAve, BPDiaAve, Education)
+
+# Rename all columns to snake case
+nhanes_small <- rename_with(nhanes_small, snakecase::to_snake_case)
+
+```
+
+\## Table of results
+
+```{r prettier-table}
+#| echo: fals
+
+nhanes_small %>%
+  filter(!is.na(diabetes)) %>%
+  group_by(diabetes, education) %>%
+  summarise(
+    mean_age = mean(age, na.rm = TRUE),
+    mean_bmi = mean(bmi, na.rm = TRUE)
+  )%>%
+  ungroup()%>%
+  mutate(
+    mean_age = round(mean_age, 1),
+    mean_bmi = round(mean_bmi, 1),
+    education = str_to_sentence(education) #capitalize the first letter of the words in the education column
+  ) %>%
+  # 3. Rename 
+  rename(
+    "Diabetes Status" = diabetes, 
+    "Education" = education,
+    "Mean Age" = mean_age, 
+    "Mean BMI" = mean_bmi
+  ) %>%
+  knitr::kable(caption = "Mean values of Age and BMI for each education and diabetes status.")
+
+```
